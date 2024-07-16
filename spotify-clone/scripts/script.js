@@ -18,12 +18,20 @@ function convertSecondsToMinutes(seconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 async function getSongs(folder) {
-  songs = []; // Move songs declaration to the correct scope
+  songs = []; // Initialize songs array
+  console.log(`Fetching songs from folder: ${folder}`); // Debug log
+
+  // Validate the folder parameter
+  if (!folder) {
+    console.error("Invalid folder parameter:", folder);
+    alert("Failed to load songs. The folder parameter is invalid.");
+    return;
+  }
 
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = await fetch(`${folder}`);
+    let songsData = await fetch(folder);
 
     // Check if the fetch was successful
     if (!songsData.ok) {
@@ -126,6 +134,7 @@ async function getSongs(folder) {
 
   return songs;
 }
+
 
 
 const playMusic = (track, pause = false) => {
