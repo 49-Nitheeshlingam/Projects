@@ -23,8 +23,7 @@ async function getSongs(folder) {
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = fetch(`/${folder}/`);
-
+let songsData = fetch('/' + folder + '/');
     // Check if the fetch was successful
     if (!songsData.ok) {
       throw new Error(`HTTP error! status: ${songsData.status}`);
