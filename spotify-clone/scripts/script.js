@@ -122,10 +122,12 @@ async function getSongs(folder) {
   } catch (error) {
     // Log any errors that occur during the fetch or parsing process
     console.error("Error fetching or parsing data:", error);
+    alert("Failed to load songs. Please check your network connection and try again.");
   }
 
   return songs;
 }
+
 const playMusic = (track, pause = false) => {
   // let audio = new Audio("/songs/"+track);
   currentSong.src = `/${currFolder}/` + track;
