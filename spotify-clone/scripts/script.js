@@ -201,7 +201,7 @@ async function displayAlbums() {
 
 // Call the main function
 async function main() {
-  await getSongs("/songs/ATrending Now");
+  await getSongs("/songs");
   playMusic(songs[0], true);
 
   //Display all the album on the page
