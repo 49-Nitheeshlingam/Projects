@@ -128,7 +128,7 @@ async function getSongs(folder) {
   return songs;
 }
 const playMusic = (track, pause = false) => {
-  // let audio = new Audio("/spotify-clone/songs/"+track);
+  // let audio = new Audio("/songs/"+track);
   currentSong.src = `/${currFolder}/` + track;
   if (!pause) {
     currentSong.play();
@@ -140,7 +140,7 @@ const playMusic = (track, pause = false) => {
 
 
 async function displayAlbums() {
-  let songsData = await fetch(`/spotify-clone/songs/`);
+  let songsData = await fetch(`/songs/`);
   let response = await songsData.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -149,10 +149,10 @@ async function displayAlbums() {
   let array = Array.from(anchors)
     for(let index=0;index<array.length;index++){
       const e =array[index];
-    if (e.href.includes("/spotify-clone/songs/") && !e.href.endsWith("/spotify-clone/songs/")) {
+    if (e.href.includes("/songs/") && !e.href.endsWith("/songs/")) {
       let folder = e.href.split("/").slice(-1)[0]; // This will print 'ncs' and 'cs'
       //Get the meta data for the folder
-      let songsData =  await fetch(`/spotify-clone/songs/${folder}/info.json`);
+      let songsData =  await fetch(`/songs/${folder}/info.json`);
       let response = await songsData.json();
       console.log(response);
       cardContainer.innerHTML=cardContainer.innerHTML + `<div data-folder="${folder}" class="card">
@@ -176,7 +176,7 @@ async function displayAlbums() {
                 </div>
               </div>
               <img
-               src="/spotify-clone/songs/${folder}/cover.jpg" alt=""
+               src="/songs/${folder}/cover.jpg" alt=""
               />
               <h2>${response.title}</h2>
               <p>${response.description}</p>
@@ -192,7 +192,7 @@ async function displayAlbums() {
       playbar.classList.remove("hidden");
       playbarhide=false;
       }
-      songs = await getSongs(`spotify-clone/songs/${item.currentTarget.dataset.folder}`);
+      songs = await getSongs(`/songs/${item.currentTarget.dataset.folder}`);
       playMusic(songs[0]);
     });
   });
@@ -202,7 +202,7 @@ async function displayAlbums() {
 
 // Call the main function
 async function main() {
-  await getSongs("spotify-clone/songs/ATrending Now");
+  await getSongs("/songs/ATrending Now");
   playMusic(songs[0], true);
 
   //Display all the album on the page
