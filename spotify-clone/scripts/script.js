@@ -1,3 +1,23 @@
+const express = require('express');
+const app = express();
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
+app.get('/songs/ATrending Now', (req, res) => {
+  // Your code to serve the songs
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+
+
 let currentSong = new Audio();
 let songs;
 let currFolder;
@@ -18,7 +38,7 @@ function convertSecondsToMinutes(seconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 async function getSongs(folder) {
-  songs = [];
+  const songs = [];
   console.log(`Fetching songs from folder: ${folder}`);
   
   if (!folder) {
@@ -27,49 +47,47 @@ async function getSongs(folder) {
     return;
   }
 
-  const url = `https://example.com${folder}`;
+  const url = `https://example.com${folder.replace(" ", "%20")}`;
   console.log(`Constructed URL: ${url}`);
   
   try {
-    currFolder = folder;
-    let songsData = await fetch(url, { mode: 'no-cors' });
-
-    // If using 'no-cors', you won't be able to read the response body
-    if (!songsData.ok) {
-      throw new Error(`HTTP error! status: ${songsData.status}`);
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    let response = await songsData.text();
 
-    console.log(response);
+    const responseData = await response.text();
+    console.log(responseData);
 
-    let div = document.createElement("div");
-    div.innerHTML = response;
-    let listItems = div.querySelectorAll("#files li");
+    const div = document.createElement("div");
+    div.innerHTML = responseData;
+    const listItems = div.querySelectorAll("#files li");
 
     let rowsHtml = "";
 
     listItems.forEach((li) => {
-      let name = li.querySelector(".name")?.textContent || "N/A";
-      let size = li.querySelector(".size")?.textContent || "N/A";
-      let date = li.querySelector(".date")?.textContent || "N/A";
-      let href = li.querySelector("a")?.getAttribute("href") || "#";
+      const name = li.querySelector(".name")?.textContent || "N/A";
+      const size = li.querySelector(".size")?.textContent || "N/A";
+      const date = li.querySelector(".date")?.textContent || "N/A";
+      const href = li.querySelector("a")?.getAttribute("href") || "#";
 
-      let sizeMB = parseFloat(size) / (1024 * 1024);
-      size = isNaN(sizeMB) ? size : `${sizeMB.toFixed(1)} MB`;
-      let formattedDate = new Date(date).toLocaleString("en-US", {
+      const sizeMB = parseFloat(size) / (1024 * 1024);
+      const formattedSize = isNaN(sizeMB) ? size : `${sizeMB.toFixed(1)} MB`;
+      const formattedDate = new Date(date).toLocaleString("en-US", {
         hour12: false,
       });
 
       rowsHtml += `<tr>
         <td><a href="${href}">${name}</a></td>
-        <td>${size}</td>
+        <td>${formattedSize}</td>
         <td>${formattedDate}</td>
       </tr>`;
     });
 
-    let containerDiv = document.createElement("div");
+    const containerDiv = document.createElement("div");
     containerDiv.innerHTML = rowsHtml;
-    let as = containerDiv.getElementsByTagName("a");
+    const as = containerDiv.getElementsByTagName("a");
 
     for (let index = 0; index < as.length; index++) {
       const element = as[index];
@@ -78,7 +96,7 @@ async function getSongs(folder) {
       }
     }
 
-    let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
+    const songUL = document.querySelector(".songList ul");
     songUL.innerHTML = "";
 
     for (const song of songs) {
@@ -96,8 +114,8 @@ async function getSongs(folder) {
       </li>`;
     }
 
-    Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach((e) => {
-      e.addEventListener("click", (element) => {
+    Array.from(document.querySelector(".songList li")).forEach((e) => {
+      e.addEventListener("click", () => {
         console.log(e.querySelector(".songfile").innerHTML);
         playMusic(e.querySelector(".songfile").innerHTML);
       });
