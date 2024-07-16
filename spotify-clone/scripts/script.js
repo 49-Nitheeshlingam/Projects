@@ -15,7 +15,7 @@ function convertSecondsToMinutes(seconds) {
   const formattedMinutes = String(minutes).padStart(2, "0");
   const formattedSeconds = String(remainingSeconds).padStart(2, "0");
 
-  return ${formattedMinutes}:${formattedSeconds};
+  return `${formattedMinutes}:${formattedSeconds}`;
 }
 async function getSongs(folder) {
   songs = []; // Move songs declaration to the correct scope
