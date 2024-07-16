@@ -138,7 +138,7 @@ async function displayAlbums() {
 }
 
 async function main() {
-  await getSongs("/songs/ATrending Now");
+  await getSongs("/songs");
   playMusic(songs[0], true);
 
   displayAlbums();
