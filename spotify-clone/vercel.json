@@ -7,6 +7,18 @@
     {
       "src": "songs/**",
       "use": "@vercel/static"
+    },
+    {
+      "src": "svg/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "css/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "scripts/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
