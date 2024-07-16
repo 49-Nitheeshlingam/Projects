@@ -18,78 +18,59 @@ function convertSecondsToMinutes(seconds) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 async function getSongs(folder) {
-  songs = []; // Initialize songs array
-  console.log(`Fetching songs from folder: ${folder}`); // Debug log
-
-  // Validate the folder parameter
+  songs = [];
+  console.log(`Fetching songs from folder: ${folder}`);
+  
   if (!folder) {
     console.error("Invalid folder parameter:", folder);
     alert("Failed to load songs. The folder parameter is invalid.");
     return;
   }
 
-  // Construct the URL properly
   const url = `https://example.com${folder}`;
-  console.log(`Constructed URL: ${url}`); // Log the constructed URL
-
+  console.log(`Constructed URL: ${url}`);
+  
   try {
-    // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = await fetch(url);
+    let songsData = await fetch(url, { mode: 'no-cors' });
 
-    // Check if the fetch was successful
+    // If using 'no-cors', you won't be able to read the response body
     if (!songsData.ok) {
       throw new Error(`HTTP error! status: ${songsData.status}`);
     }
-
-    // Get the response text
     let response = await songsData.text();
 
-    // Log the response (optional)
     console.log(response);
 
-    // Create a div element to parse the HTML response
     let div = document.createElement("div");
     div.innerHTML = response;
-
-    // Extract all <li> elements within the <ul> with id 'files'
     let listItems = div.querySelectorAll("#files li");
 
-    // Initialize an empty string to hold the HTML for table rows
     let rowsHtml = "";
 
-    // Iterate over each <li> element and extract data from the <span> elements
     listItems.forEach((li) => {
       let name = li.querySelector(".name")?.textContent || "N/A";
       let size = li.querySelector(".size")?.textContent || "N/A";
       let date = li.querySelector(".date")?.textContent || "N/A";
       let href = li.querySelector("a")?.getAttribute("href") || "#";
 
-      // Convert size to MB if necessary
       let sizeMB = parseFloat(size) / (1024 * 1024);
       size = isNaN(sizeMB) ? size : `${sizeMB.toFixed(1)} MB`;
-
-      // Format date properly if necessary
       let formattedDate = new Date(date).toLocaleString("en-US", {
         hour12: false,
       });
 
-      // Append the row HTML to the rowsHtml string
       rowsHtml += `<tr>
-  <td><a href="${href}">${name}</a></td>
-  <td>${size}</td>
-  <td>${formattedDate}</td>
-  </tr>`;
+        <td><a href="${href}">${name}</a></td>
+        <td>${size}</td>
+        <td>${formattedDate}</td>
+      </tr>`;
     });
 
-    // Create a container div to hold the final HTML string
     let containerDiv = document.createElement("div");
     containerDiv.innerHTML = rowsHtml;
-
-    // Query the container div for <a> tags
     let as = containerDiv.getElementsByTagName("a");
 
-    // Iterate over the <a> tags and filter for .mp3 files
     for (let index = 0; index < as.length; index++) {
       const element = as[index];
       if (element.href.endsWith(".mp3")) {
@@ -97,47 +78,38 @@ async function getSongs(folder) {
       }
     }
 
-    let songUL = document
-      .querySelector(".songList")
-      .getElementsByTagName("ul")[0];
-
+    let songUL = document.querySelector(".songList").getElementsByTagName("ul")[0];
     songUL.innerHTML = "";
 
     for (const song of songs) {
-      songUL.innerHTML +=
-        `<li>
-      <img src="svg/music.svg" class="invert" alt="">
-                <div class="info">
-                  <div>${song.replaceAll("%20", " ").split(".")[0].trim()}</div>
-                  <div>${song.replaceAll("%20", " ").split(".")[1].trim()}</div>
-                  <div class="songfile hidden">${song.replaceAll(
-                    "%20",
-                    " "
-                  )}</div>
-                </div>
-                <div class="playnow">
-                  <span>Play Now</span>
-                  <img src="svg/playsong.svg" class="invert" alt="">
-                </div>
+      songUL.innerHTML += `<li>
+        <img src="svg/music.svg" class="invert" alt="">
+        <div class="info">
+          <div>${song.replaceAll("%20", " ").split(".")[0].trim()}</div>
+          <div>${song.replaceAll("%20", " ").split(".")[1].trim()}</div>
+          <div class="songfile hidden">${song.replaceAll("%20", " ")}</div>
+        </div>
+        <div class="playnow">
+          <span>Play Now</span>
+          <img src="svg/playsong.svg" class="invert" alt="">
+        </div>
       </li>`;
     }
 
-    Array.from(
-      document.querySelector(".songList").getElementsByTagName("li")
-    ).forEach((e) => {
+    Array.from(document.querySelector(".songList").getElementsByTagName("li")).forEach((e) => {
       e.addEventListener("click", (element) => {
         console.log(e.querySelector(".songfile").innerHTML);
         playMusic(e.querySelector(".songfile").innerHTML);
       });
     });
   } catch (error) {
-    // Log any errors that occur during the fetch or parsing process
     console.error("Error fetching or parsing data:", error);
     alert("Failed to load songs. Please check your network connection and try again.");
   }
 
   return songs;
 }
+
 
 
 
