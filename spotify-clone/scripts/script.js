@@ -23,7 +23,7 @@ async function getSongs(folder) {
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = await fetch(`/${folder}/`);
+    let songsData = await fetch(`${folder}`);
 
     // Check if the fetch was successful
     if (!songsData.ok) {
@@ -81,7 +81,7 @@ async function getSongs(folder) {
     for (let index = 0; index < as.length; index++) {
       const element = as[index];
       if (element.href.endsWith(".mp3")) {
-        songs.push(element.href.split(`/${folder}/`)[1]);
+        songs.push(element.href.split(`${folder}`)[1]);
       }
     }
 
@@ -92,8 +92,7 @@ async function getSongs(folder) {
     songUL.innerHTML = "";
 
     for (const song of songs) {
-      songUL.innerHTML =
-        songUL.innerHTML +
+      songUL.innerHTML +=
         `<li>
       <img src="svg/music.svg" class="invert" alt="">
                 <div class="info">
@@ -127,6 +126,7 @@ async function getSongs(folder) {
 
   return songs;
 }
+
 
 const playMusic = (track, pause = false) => {
   // let audio = new Audio("/songs/"+track);
