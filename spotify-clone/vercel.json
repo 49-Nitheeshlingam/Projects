@@ -1,18 +1,5 @@
 {
   "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "songs/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/songs/(.*)",
-      "dest": "/songs/$1"
-    }
+    { "src": "public/**/*", "use": "@vercel/static" }
   ]
 }
