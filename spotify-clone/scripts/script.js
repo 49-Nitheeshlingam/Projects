@@ -23,7 +23,7 @@ async function getSongs(folder) {
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = await fetch(`http://192.168.170.94:52861/${folder}/`);
+    let songsData = fetch(`/${folder}/`);
 
     // Check if the fetch was successful
     if (!songsData.ok) {
@@ -140,7 +140,7 @@ const playMusic = (track, pause = false) => {
 
 
 async function displayAlbums() {
-  let songsData = await fetch(`http://192.168.170.94:52861/songs/`);
+  let songsData = await fetch(`/songs/`);
   let response = await songsData.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -152,7 +152,7 @@ async function displayAlbums() {
     if (e.href.includes("/songs/") && !e.href.endsWith("/songs/")) {
       let folder = e.href.split("/").slice(-1)[0]; // This will print 'ncs' and 'cs'
       //Get the meta data for the folder
-      let songsData = await fetch(`http://192.168.170.94:52861/songs/${folder}/info.json`);
+      let songsData =  await fetch(`/songs/${folder}/info.json`);
       let response = await songsData.json();
       console.log(response);
       cardContainer.innerHTML=cardContainer.innerHTML + `<div data-folder="${folder}" class="card">
