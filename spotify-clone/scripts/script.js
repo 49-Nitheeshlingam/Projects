@@ -23,11 +23,11 @@ async function getSongs(folder) {
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = fetch(/${folder}/);
+    let songsData = fetch(`/${folder}/`);
 
     // Check if the fetch was successful
     if (!songsData.ok) {
-      throw new Error(HTTP error! status: ${songsData.status});
+      throw new Error(`HTTP error! status: ${songsData.status}`);
     }
 
     // Get the response text
@@ -55,7 +55,7 @@ async function getSongs(folder) {
 
       // Convert size to MB if necessary
       let sizeMB = parseFloat(size) / (1024 * 1024);
-      size = isNaN(sizeMB) ? size : ${sizeMB.toFixed(1)} MB;
+      size = isNaN(sizeMB) ? size : `${sizeMB.toFixed(1)} MB`;
 
       // Format date properly if necessary
       let formattedDate = new Date(date).toLocaleString("en-US", {
@@ -129,7 +129,7 @@ async function getSongs(folder) {
 }
 const playMusic = (track, pause = false) => {
   // let audio = new Audio("/songs/"+track);
-  currentSong.src = /${currFolder}/ + track;
+  currentSong.src = `/${currFolder}/`+ track;
   if (!pause) {
     currentSong.play();
     play.src = "svg/pause.svg";
@@ -140,7 +140,7 @@ const playMusic = (track, pause = false) => {
 
 
 async function displayAlbums() {
-  let songsData = await fetch(/songs/);
+  let songsData = await fetch(`/songs/`);
   let response = await songsData.text();
   let div = document.createElement("div");
   div.innerHTML = response;
@@ -152,7 +152,7 @@ async function displayAlbums() {
     if (e.href.includes("/songs/") && !e.href.endsWith("/songs/")) {
       let folder = e.href.split("/").slice(-1)[0]; // This will print 'ncs' and 'cs'
       //Get the meta data for the folder
-      let songsData =  await fetch(/songs/${folder}/info.json);
+      let songsData =  await fetch(`/songs/${folder}/info.json`);
       let response = await songsData.json();
       console.log(response);
       cardContainer.innerHTML=cardContainer.innerHTML + `<div data-folder="${folder}" class="card">
@@ -192,7 +192,7 @@ async function displayAlbums() {
       playbar.classList.remove("hidden");
       playbarhide=false;
       }
-      songs = await getSongs(/songs/${item.currentTarget.dataset.folder});
+      songs = await getSongs(`/songs/${item.currentTarget.dataset.folder}`);
       playMusic(songs[0]);
     });
   });
@@ -245,7 +245,7 @@ async function main() {
     console.log(currentTime, duration);
     document.querySelector(
       ".songtime"
-    ).innerHTML = ${formattedCurrentTime} / ${formattedDuration};
+    ).innerHTML = `${formattedCurrentTime} / ${formattedDuration}`;
     document.querySelector(".circle").style.left =
       (currentSong.currentTime / currentSong.duration) * 100 + "%";
   });
