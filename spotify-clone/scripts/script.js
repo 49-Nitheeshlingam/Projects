@@ -28,10 +28,14 @@ async function getSongs(folder) {
     return;
   }
 
+  // Construct the URL properly
+  const url = `https://example.com${folder}`;
+  console.log(`Constructed URL: ${url}`); // Log the constructed URL
+
   try {
     // Fetch the HTML content from the given URL
     currFolder = folder;
-    let songsData = await fetch(folder);
+    let songsData = await fetch(url);
 
     // Check if the fetch was successful
     if (!songsData.ok) {
